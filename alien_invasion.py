@@ -3,21 +3,22 @@ import pygame
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 
 class AlienInvasion:
 
     def __init__(self):
         pygame.init()
-        self.clock = pygame.time.Clock()
+        pygame.display.set_caption('Alien Invension')
         self.settings = Settings()
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height ))
+        self.clock = pygame.time.Clock()
         self.ship = Ship()
         self.bullets = pygame.sprite.Group()
-        pygame.display.set_caption('Alien Invension')
-        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height ))
-        # self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-        # self.settings.screen_height = self.screen.get_rect().height 
-        # self.settings.screen_width = self.screen.get_rect().width
+        self.aliens = pygame.sprite.Group()
+        self._create_fleet()
 
+        
 
     def run_game(self):
         while True:
@@ -60,16 +61,40 @@ class AlienInvasion:
 
     def _update_bullets(self):
         self.bullets.update()
+
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+    def _create_fleet(self):
+        alien = Alien()
+        alien_height = alien.rect.width
+        alien_width = alien.rect.width
+        current_x = alien_width
+        current_y = alien_height
+
+        while current_y < (self .settings.screen_height - 5 * alien_height):
+
+            while current_x < (self.settings.screen_width - alien_width):
+                self._create_alien(current_x, current_y)
+                current_x += 2 * alien_width
+            current_x = alien_width
+            current_y += 2 * alien_height
+
+    def _create_alien(self, x_position, y_position):
+            new_alien = Alien()
+            new_alien.x = x_position
+            new_alien.rect.x = x_position
+            new_alien.rect.y = y_position
+            self.aliens.add(new_alien)
+
+        
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
-            
         for bullet in self.bullets:
             bullet.draw_bullet()
         self.ship.blitme()
+        self.aliens.draw(self.screen)
         pygame.display.flip()
 
 
