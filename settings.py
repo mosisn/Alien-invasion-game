@@ -5,6 +5,7 @@ class Settings:
         self.bg_color = (230, 230, 230)
 
         self.ship_speed = 2.5
+        self.ship_limit = 3
 
         self.bullet_speed = 4.5
         self.bullet_height = 15
